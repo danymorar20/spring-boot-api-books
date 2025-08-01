@@ -56,4 +56,15 @@ public class BookJpaRepository implements BookRepository {
                 .map(BookEntity::toDomain)
                 .toList();
     }
+
+    @Override
+    public Double getAveragePrice() {
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Double> criteriaQuery = criteriaBuilder.createQuery(Double.class);
+
+        Root<BookEntity> root = criteriaQuery.from(BookEntity.class);
+        criteriaQuery.select(criteriaBuilder.avg(root.get("price")));
+
+        return entityManager.createQuery(criteriaQuery).getSingleResult();
+    }
 }
